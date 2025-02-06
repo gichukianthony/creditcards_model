@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection API</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Fraud Detection API</h1>
+    </nav>
+
+    <div class="container">
+        <h2>Detect Fraudulent Transactions</h2>
+        <p>Enter a set of numerical features below and let our AI predict if it's fraudulent.</p>
+        
+        <form id="prediction-form">
+            <label for="features">Enter Features (comma-separated):</label>
+            <input type="text" id="features" name="features" required placeholder="e.g. -10.0, 15.0, -7.0, 18.0">
+            <button type="submit">Predict</button>
+        </form>
+
+        <h3>Prediction Result:</h3>
+        <p id="result"></p>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Fraud Detection API | Powered by AI</p>
+    </footer>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            let inputFeatures = document.getElementById('features').value
+                .split(',')
+                .map(Number); // Convert to array of numbers
+
+            let response = await fetch('/predict', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({"features": inputFeatures})
+            });
+
+            let result = await response.json();
+            document.getElementById('result').innerText = "Prediction: " + JSON.stringify(result);
+        });
+    </script>
+</body>
+</html>
